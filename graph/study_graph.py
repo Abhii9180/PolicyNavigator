@@ -69,7 +69,9 @@ def route_after_planner(state: AgentState):
         return "explain_only_path"
     if intent == "quiz_only":
         return "quiz_only_path"
-    return "learn_and_test_path"
+    if intent == "learn_and_quiz":
+        return "learn_and_quiz_path"
+    return "explain_only_path"  # DEFAULT: learn_only
 
 
 def route_after_research(state: AgentState):
@@ -78,14 +80,22 @@ def route_after_research(state: AgentState):
         return "explain_only"
     if intent == "quiz_only":
         return "quiz_only"
-    return "both"
+    if intent == "learn_and_quiz":
+        return "both"
+    return "explain_only"  # DEFAULT: learn_only
 
 
 def route_after_explain(state: AgentState):
-    """learn_only → synthesizer; learn_and_test → quiz then synthesizer."""
-    if state["intent"] == "learn_only":
+    """
+    After explanation:
+    - learn_only → synthesizer (just explanation)
+    - learn_and_quiz → quiz then synthesizer (explanation + quiz)
+    """
+    if state["intent"] in ["learn_only"]:
         return "synth"
-    return "quiz"
+    if state["intent"] in ["learn_and_quiz"]:
+        return "quiz"
+    return "synth"  # DEFAULT: synthesis without quiz
 
 
 def build_graph():
@@ -107,7 +117,7 @@ def build_graph():
             "fast_path": "fast_response",
             "explain_only_path": "research",
             "quiz_only_path": "research",
-            "learn_and_test_path": "research",
+            "learn_and_quiz_path": "research",
         },
     )
 
