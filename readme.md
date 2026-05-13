@@ -481,7 +481,7 @@ MIT License — see LICENSE file for details
 
 ## 👥 Author
 
-**Abhii** | AI Engineer @ Wissen Technology
+**Abhyuday Pratap Singh** |  Engineer @ Wissen Technology
 
 ---
 
